@@ -1,0 +1,53 @@
+name: YACS AI plugin smoke test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unix-launcher:
+    name: Launcher (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate manifests
+        run: |
+          python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+          python3 -m json.tool plugins/yacs/.claude-plugin/plugin.json >/dev/null
+          python3 -m json.tool plugins/yacs/.codex-plugin/plugin.json >/dev/null
+          python3 -m json.tool plugins/yacs/.mcp.json >/dev/null
+      - name: Verify launcher argument forwarding
+        shell: bash
+        run: |
+          output="$(YACS_MCP_EXECUTABLE=/bin/echo plugins/yacs/scripts/yacs-mcp-launcher.cmd smoke-probe)"
+          test "$output" = "--mcp-stdio smoke-probe"
+
+  windows-launcher:
+    name: Launcher (windows-latest)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate manifests
+        shell: pwsh
+        run: |
+          Get-Content .claude-plugin/marketplace.json | ConvertFrom-Json | Out-Null
+          Get-Content plugins/yacs/.claude-plugin/plugin.json | ConvertFrom-Json | Out-Null
+          Get-Content plugins/yacs/.codex-plugin/plugin.json | ConvertFrom-Json | Out-Null
+          Get-Content plugins/yacs/.mcp.json | ConvertFrom-Json | Out-Null
+      - name: Verify launcher argument forwarding
+        shell: pwsh
+        run: |
+          $stub = Join-Path $env:RUNNER_TEMP "yacs-mcp-stub.cmd"
+          Set-Content -Path $stub -Value "@echo off`r`necho %*" -NoNewline
+          $env:YACS_MCP_EXECUTABLE = $stub
+          $output = & .\plugins\yacs\scripts\yacs-mcp-launcher.cmd smoke-probe
+          if ($output.Trim() -ne "--mcp-stdio smoke-probe") {
+            throw "Unexpected launcher output: $output"
+          }
