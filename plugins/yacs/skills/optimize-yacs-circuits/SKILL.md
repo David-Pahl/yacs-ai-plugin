@@ -33,6 +33,14 @@ sorted frequency alone, especially near crossings or hybridization.
   parameter and identify incompatible or underdetermined objectives.
 - Resolve topology, model-binding, port-load, and preflight errors before the
   run.
+- Treat every reported YACS error as blocking until it is resolved. Read the
+  exact `preflight.issues`, `runtime.error`, or run error message; do not infer
+  success from elapsed time, progress, or a previously saved result.
+- `Repeat staged passes` is valid only with `stageSemantics: "exact-v2"` and
+  `cumulativeStages: false`. It also requires complete, non-overlapping local
+  coverage before the final row. If preflight rejects the schedule, repair the
+  schedule or use global refinement; do not repeatedly launch the same invalid
+  configuration.
 
 ## Run and monitor
 
@@ -45,6 +53,13 @@ sorted frequency alone, especially near crossings or hybridization.
 - When a stage fails, diagnose mode identity, target leverage, bounds, topology,
   or numerical conditioning before changing the problem.
 - Re-check physical mode ownership after staged changes and avoided crossings.
+- Stop a clearly invalid pass when roots become non-finite, the physical mode
+  count changes unexpectedly, a retry is repeatedly rejected, or the residual
+  grows far beyond its last verified value. Preserve the last verified physical
+  circuit as the recovery point.
+- Optimizer `parameter_updates` are proposed values. Confirm that they were
+  applied to the document before treating them as the circuit state, then rerun
+  the source analyses used by dependent objectives.
 
 ## Verify and explain
 
@@ -53,3 +68,12 @@ target, parameter bound, tracked mode, warning, and recovery rather than relying
 on a single success flag. Report achieved values with units, residual misses,
 final parameters, active constraints, mode-tracking assumptions, and any
 tradeoffs. Suggest a follow-up only when it has a clear diagnostic purpose.
+
+For coupled qubit-readout tuning, use a physically ordered loop: establish and
+separate mode frequencies, tune resonator linewidths, tune chi and exchange J,
+then rerun the modal source analysis and retune linewidths because the coupling
+changes can move and reload the resonators. Small local changes may use
+`|chi| proportional to C_c^2` and symmetric-arm `|J|` proportional to the
+product of the arm capacitances as initial estimates only; measure again after
+every update. For magnitude constraints such as `abs_eq`, report both the
+signed measured value and its magnitude.

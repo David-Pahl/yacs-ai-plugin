@@ -34,6 +34,9 @@ installation or legacy recovery.
   frequency alone.
 - Resolve preflight errors before starting the run. Do not hide warnings that
   can change the physical interpretation.
+- Treat `preflight.issues`, `runtime.error`, and run errors as authoritative.
+  Resolve the exact message before retrying instead of assuming a long-running
+  or previously successful analysis is still valid.
 - Call `run_yacs_analysis` with the owner ID and current revision information
   returned by the context tools.
 - If the run is awaiting input, use `get_yacs_pending_dialog` and
@@ -49,6 +52,14 @@ installation or legacy recovery.
   summaries or specific series instead of transferring full raw payloads.
 - Compare units, sweep axes, owner, revision, and analysis configuration before
   comparing two results.
+- Any parameter mutation makes source results physically stale even when a
+  cached result remains visible. Rerun detY/root finding first, then dependent
+  EPR, exchange-J, Purcell, T1, or optimization objectives in dependency order.
+- If the root count or participation-based identity changes, rebuild the mode
+  mapping before evaluating chi, self-Kerr, linewidth, or pairwise quantities.
+- For magnitude constraints, retain and report the signed result as well as the
+  magnitude. Do not silently turn an inferred scaling estimate into a measured
+  YACS value.
 
 ## Report the result
 
