@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "yacs": {
-      "command": "./scripts/yacs-mcp-launcher.cmd",
-      "args": [],
+      "command": "node",
+      "args": ["./scripts/yacs-mcp-launcher.js"],
       "cwd": ".",
       "startup_timeout_sec": 60,
       "tool_timeout_sec": 180
