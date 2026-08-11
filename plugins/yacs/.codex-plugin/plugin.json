@@ -1,6 +1,6 @@
 {
   "name": "yacs",
-  "version": "0.2.0+codex.20260811032148",
+  "version": "0.2.1+codex.20260811035456",
   "description": "Design, repair, analyze, and optimize superconducting microwave circuits in YACS.",
   "author": {
     "name": "David Pahl",

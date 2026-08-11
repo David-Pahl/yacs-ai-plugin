@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "yacs",
   "displayName": "YACS",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Design, repair, analyze, and optimize circuits with the local YACS Desktop MCP integration.",
   "author": {
     "name": "David Pahl",

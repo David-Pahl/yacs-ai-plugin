@@ -3,6 +3,8 @@
 @echo off
 setlocal
 set "YACS_MCP="
+if defined YACS_MCP_EXECUTABLE if exist "%YACS_MCP_EXECUTABLE%" set "YACS_MCP=%YACS_MCP_EXECUTABLE%"
+if defined YACS_MCP goto yacs_run
 for %%P in (
   "%LOCALAPPDATA%\Programs\Yacs\resources\backend-bin\yacs-desktop-server\yacs-desktop-server.exe"
   "%LOCALAPPDATA%\Programs\yacs-desktop\resources\backend-bin\yacs-desktop-server\yacs-desktop-server.exe"
@@ -20,10 +22,16 @@ YACS_WINDOWS
 set -eu
 
 try_yacs_mcp() {
-  if [ -x "$1" ]; then
-    exec "$1" --mcp-stdio "$@"
+  yacs_mcp_executable=$1
+  shift
+  if [ -x "$yacs_mcp_executable" ]; then
+    exec "$yacs_mcp_executable" --mcp-stdio "$@"
   fi
 }
+
+if [ -n "${YACS_MCP_EXECUTABLE:-}" ]; then
+  try_yacs_mcp "$YACS_MCP_EXECUTABLE" "$@"
+fi
 
 case "$(uname -s 2>/dev/null || true)" in
   Darwin)
