@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "yacs": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/bin/yacs-mcp-launcher.cmd",
+      "args": [],
+      "cwd": "${CLAUDE_PLUGIN_ROOT}"
+    }
+  }
+}

@@ -19,8 +19,10 @@ editing of saved `.yacs` data.
 4. Read `yacs://analysis-optimization-guide` before configuring modal, EPR,
    detY, Purcell, or other multi-mode work.
 
-If the MCP tools are unavailable, ask the user to open **Help & About** in YACS
-Desktop, connect YACS to their assistant, and start a new task.
+If the MCP tools are unavailable, ask the user to install and start YACS
+Desktop, then start a new task. The plugin normally connects automatically; use
+the matching setup button under **Help & About** only for a nonstandard
+installation or legacy recovery.
 
 ## Configure and run
 

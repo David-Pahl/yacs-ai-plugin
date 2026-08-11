@@ -1,6 +1,6 @@
 {
   "name": "yacs",
-  "version": "0.1.0+codex.20260811025222",
+  "version": "0.2.0+codex.20260811032148",
   "description": "Design, repair, analyze, and optimize superconducting microwave circuits in YACS.",
   "author": {
     "name": "David Pahl",
@@ -17,6 +17,7 @@
     "quantum-computing"
   ],
   "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "YACS",
     "shortDescription": "Design and analyze circuits in YACS.",

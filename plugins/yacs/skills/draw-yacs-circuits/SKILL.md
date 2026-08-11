@@ -11,10 +11,12 @@ the requested operation.
 
 ## Confirm the YACS connection
 
-Call `get_yacs_status` when connection state is unknown. If the YACS MCP tools
-are unavailable, ask the user to open **Help & About** in YACS Desktop, choose
-**Add YACS to Codex** or **Add YACS to Claude** for their assistant, and start a
-new task. Do not guess an executable path or silently fall back to UI
+Call `get_yacs_status` when connection state is unknown. The YACS plugin starts
+the installed app's MCP integration automatically, so first ask the user to
+install and start YACS Desktop and then start a new task. If the plugin launcher
+reports that a nonstandard installation cannot be found, use **Help & About**
+in YACS Desktop and choose **Add YACS to Codex** or **Add YACS to Claude** as a
+fallback. Do not guess an executable path or silently fall back to UI
 automation.
 
 ## Build or edit efficiently
