@@ -75,26 +75,35 @@ function candidates() {
   return explicit;
 }
 
-const executable = candidates().find(executableFile);
-if (!executable) {
-  console.error("YACS Desktop was not found in a standard installation location.");
-  console.error("Install and start YACS, or use Help & About > Add YACS to Claude/Codex for a nonstandard installation.");
-  process.exit(1);
+function backendArguments(extraArguments) {
+  return ["--mcp-stdio", ...extraArguments];
 }
 
-const child = spawn(executable, ["--mcp-stdio", ...process.argv.slice(2)], {
-  stdio: "inherit",
-  windowsHide: true,
-});
+function main() {
+  const executable = candidates().find(executableFile);
+  if (!executable) {
+    console.error("YACS Desktop was not found in a standard installation location.");
+    console.error("Install and start YACS, or use Help & About > Add YACS to Claude/Codex for a nonstandard installation.");
+    process.exit(1);
+  }
 
-child.on("error", (error) => {
-  console.error(`Could not start the YACS MCP server: ${error.message}`);
-  process.exit(1);
-});
-child.on("exit", (code, signal) => {
-  if (signal) process.kill(process.pid, signal);
-  else process.exit(code ?? 1);
-});
-for (const signal of ["SIGINT", "SIGTERM"]) {
-  process.on(signal, () => child.kill(signal));
+  const child = spawn(executable, backendArguments(process.argv.slice(2)), {
+    stdio: "inherit",
+    windowsHide: true,
+  });
+
+  child.on("error", (error) => {
+    console.error(`Could not start the YACS MCP server: ${error.message}`);
+    process.exit(1);
+  });
+  child.on("exit", (code, signal) => {
+    if (signal) process.kill(process.pid, signal);
+    else process.exit(code ?? 1);
+  });
+  for (const signal of ["SIGINT", "SIGTERM"]) {
+    process.on(signal, () => child.kill(signal));
+  }
 }
+
+module.exports = { backendArguments, candidates };
+if (require.main === module) main();

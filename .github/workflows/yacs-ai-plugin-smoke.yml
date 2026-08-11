@@ -44,19 +44,7 @@ jobs:
       - name: Verify launcher argument forwarding
         shell: pwsh
         run: |
-          $stub = Join-Path $env:RUNNER_TEMP "yacs-mcp-stub.exe"
-          $source = @'
-          using System;
-          public static class Program {
-              public static int Main(string[] args) {
-                  Console.Write(string.Join(" ", args));
-                  return 0;
-              }
-          }
-          '@
-          Add-Type -TypeDefinition $source -OutputAssembly $stub -OutputType ConsoleApplication
-          $env:YACS_MCP_EXECUTABLE = $stub
-          $output = & node .\plugins\yacs\scripts\yacs-mcp-launcher.js smoke-probe
+          $output = & node -e "const launcher = require('./plugins/yacs/scripts/yacs-mcp-launcher.js'); process.stdout.write(launcher.backendArguments(['smoke-probe']).join(' '));"
           if ($output.Trim() -ne "--mcp-stdio smoke-probe") {
             throw "Unexpected launcher output: $output"
           }
