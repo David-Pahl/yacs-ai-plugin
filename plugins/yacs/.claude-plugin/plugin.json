@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "yacs",
   "displayName": "YACS",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Design, repair, analyze, and optimize circuits with the local YACS Desktop MCP integration.",
   "author": {
     "name": "David Pahl",
@@ -18,5 +18,5 @@
     "microwave-engineering",
     "quantum-computing"
   ],
-  "mcpServers": "./.claude-mcp.json"
+  "mcpServers": "./.mcp.json"
 }
