@@ -25,8 +25,10 @@ The setup buttons under YACS **Help & About** remain as fallbacks:
 
 - use **Add YACS to Codex** for an unusual Codex or YACS installation that the
   plugin launcher cannot locate;
-- use **Add YACS to Claude** for an unusual Claude Code installation, or for
-  Claude Desktop, which does not install Claude Code plugins.
+- use **Add YACS to Claude** for an unusual Claude installation or when the
+  local MCP tools must be available in ordinary Claude Desktop Chat. Claude
+  Desktop plugins expose their local MCP servers to Cowork and Code, while
+  Chat loads the plugin skills but not the local MCP tools.
 
 ## Install in Codex
 
@@ -59,6 +61,17 @@ install `yacs@yacs`. The equivalent commands inside Claude Code are:
 ```
 
 Then start YACS Desktop and reload plugins or start a new Claude Code session.
+
+## Install in Claude Desktop
+
+Open **Customize > Plugins**, choose **Add plugin > Add marketplace > Add from
+a repository**, and enter `David-Pahl/yacs-ai-plugin`. Install **YACS** from the
+new personal marketplace and approve its local `yacs` MCP server.
+
+The five skills are available in Desktop after installation. The local MCP
+tools run in Claude Cowork and Claude Code. To expose the MCP tools in ordinary
+Desktop Chat, keep using YACS **Help & About > Add YACS to Claude** or install a
+separate YACS Desktop Extension package when one is provided.
 
 ## How automatic connection works
 
