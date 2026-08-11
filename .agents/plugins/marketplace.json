@@ -1,0 +1,20 @@
+{
+  "name": "yacs",
+  "interface": {
+    "displayName": "YACS"
+  },
+  "plugins": [
+    {
+      "name": "yacs",
+      "source": {
+        "source": "local",
+        "path": "./plugins/yacs"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Science"
+    }
+  ]
+}

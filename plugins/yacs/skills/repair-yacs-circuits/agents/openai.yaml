@@ -1,0 +1,13 @@
+interface:
+  display_name: "Repair YACS Circuits"
+  short_description: "Diagnose and repair YACS circuit workspaces"
+  default_prompt: "Use $repair-yacs-circuits to diagnose and repair the circuit open in YACS."
+  icon_small: "./assets/yacs-icon.png"
+  icon_large: "./assets/yacs-icon.png"
+  brand_color: "#2563EB"
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "yacs"
+      description: "Local tools provided by the installed YACS Desktop app"

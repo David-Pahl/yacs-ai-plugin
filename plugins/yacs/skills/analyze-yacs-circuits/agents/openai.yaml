@@ -1,0 +1,13 @@
+interface:
+  display_name: "Analyze YACS Circuits"
+  short_description: "Run and interpret YACS circuit analyses"
+  default_prompt: "Use $analyze-yacs-circuits to run and interpret an analysis in the open YACS document."
+  icon_small: "./assets/yacs-icon.png"
+  icon_large: "./assets/yacs-icon.png"
+  brand_color: "#2563EB"
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "yacs"
+      description: "Local tools provided by the installed YACS Desktop app"

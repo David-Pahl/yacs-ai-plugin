@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "yacs",
+  "displayName": "YACS",
+  "version": "0.1.0",
+  "description": "Design, repair, analyze, and optimize circuits with the local YACS Desktop MCP integration.",
+  "author": {
+    "name": "David Pahl",
+    "url": "https://yacs.studio"
+  },
+  "homepage": "https://yacs.studio",
+  "repository": "https://github.com/David-Pahl/yacs-ai-plugin",
+  "license": "Proprietary",
+  "keywords": [
+    "yacs",
+    "circuit-simulation",
+    "superconducting-circuits",
+    "microwave-engineering",
+    "quantum-computing"
+  ]
+}

@@ -1,0 +1,13 @@
+interface:
+  display_name: "Optimize YACS Circuits"
+  short_description: "Tune YACS designs with guided optimization"
+  default_prompt: "Use $optimize-yacs-circuits to tune the open YACS design with guided optimization."
+  icon_small: "./assets/yacs-icon.png"
+  icon_large: "./assets/yacs-icon.png"
+  brand_color: "#2563EB"
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "yacs"
+      description: "Local tools provided by the installed YACS Desktop app"
