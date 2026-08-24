@@ -83,7 +83,7 @@ function main() {
   const executable = candidates().find(executableFile);
   if (!executable) {
     console.error("YACS Desktop was not found in a standard installation location.");
-    console.error("Install and start YACS, or use Help & About > Add YACS to Claude/Codex for a nonstandard installation.");
+    console.error("Install and start YACS, or use Help & About > AI integration > Connection status and fallback setup for a nonstandard installation.");
     process.exit(1);
   }
 

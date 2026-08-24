@@ -1,13 +1,15 @@
 # YACS AI plugin
 
-The official YACS plugin adds five focused circuit workflows to Codex and
+The official YACS plugin adds seven focused circuit workflows to Codex and
 Claude Code:
 
+- learn YACS by reaching a first verified result in a maintained example;
+- choose, configure, and run the analysis that answers a physical question;
+- explore parameter and flux sensitivity with bounded design sweeps;
 - draw clean, topology-safe YACS circuits;
 - run and interpret YACS analyses;
 - configure and diagnose guided optimizations;
-- repair broken or visually damaged workspaces; and
-- open maintained YACS tutorials, examples, and recipes.
+- repair broken or visually damaged workspaces.
 
 The plugin contains skills, manifests, branding, and a small source-visible
 launcher that locates YACS Desktop. It does **not** contain the YACS application,
@@ -21,27 +23,31 @@ MCP mode bundled with a standard YACS installation, so Codex and Claude Code do
 not normally require a separate in-app connection step. Start a new assistant
 task after installing or updating the plugin.
 
-The setup buttons under YACS **Help & About** remain as fallbacks:
+YACS **Help & About > AI integration** includes the installation steps plus a
+compact **Connection status and fallback setup** disclosure:
 
-- use **Add YACS to Codex** for an unusual Codex or YACS installation that the
+- use the Codex fallback for an unusual Codex or YACS installation that the
   plugin launcher cannot locate;
-- use **Add YACS to Claude** for an unusual Claude installation or when the
+- use the Claude fallback for an unusual Claude installation or when the
   local MCP tools must be available in ordinary Claude Desktop Chat. Claude
   Desktop plugins expose their local MCP servers to Cowork and Code, while
   Chat loads the plugin skills but not the local MCP tools.
 
 ## Install in Codex
 
-Add the public marketplace repository and install YACS:
+YACS is not yet listed in the built-in Codex plugin directory. Open
+**Plugins**, choose **Add > Add a marketplace**, enter
+`David-Pahl/yacs-ai-plugin` under **Source**, and add the marketplace. Then
+select **YACS** in that marketplace and install it.
+
+The equivalent CLI commands are:
 
 ```text
 codex plugin marketplace add David-Pahl/yacs-ai-plugin --ref main
 codex plugin add yacs@yacs
 ```
 
-Then start YACS Desktop and open a new Codex task. Once the plugin is listed in
-the built-in Codex directory, users can install it from the plugin browser
-instead.
+Then start YACS Desktop and open a new Codex task.
 
 For local development from the private YACS checkout:
 
@@ -68,10 +74,11 @@ Open **Customize > Plugins**, choose **Add plugin > Add marketplace > Add from
 a repository**, and enter `David-Pahl/yacs-ai-plugin`. Install **YACS** from the
 new personal marketplace and approve its local `yacs` MCP server.
 
-The five skills are available in Desktop after installation. The local MCP
+The seven skills are available in Desktop after installation. The local MCP
 tools run in Claude Cowork and Claude Code. To expose the MCP tools in ordinary
-Desktop Chat, keep using YACS **Help & About > Add YACS to Claude** or install a
-separate YACS Desktop Extension package when one is provided.
+Desktop Chat, use YACS **Help & About > AI integration > Connection status and
+fallback setup** or install a separate YACS Desktop Extension package when one
+is provided.
 
 ## How automatic connection works
 

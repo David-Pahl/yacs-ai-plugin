@@ -14,8 +14,8 @@ the requested operation.
 Call `get_yacs_status` when connection state is unknown. The YACS plugin starts
 the installed app's MCP integration automatically, so first ask the user to
 install and start YACS Desktop and then start a new task. If the plugin launcher
-reports that a nonstandard installation cannot be found, use **Help & About**
-in YACS Desktop and choose **Add YACS to Codex** or **Add YACS to Claude** as a
+reports that a nonstandard installation cannot be found, use **Help & About >
+AI integration > Connection status and fallback setup** in YACS Desktop as a
 fallback. Do not guess an executable path or silently fall back to UI
 automation.
 
@@ -33,6 +33,17 @@ automation.
 - If YACS reports a pending dialog or an editor-busy state caused by a YACS
   popup, use `get_yacs_pending_dialog` and `respond_to_yacs_dialog`.
 
+## Represent transmons explicitly
+
+- Always draw a transmon's capacitance as its own capacitor element in
+  parallel with the Josephson junction, connected across the same two circuit
+  nodes.
+- Never encode, store, or hide the transmon shunt capacitance as junction
+  capacitance. This applies even when the source specification reports only a
+  total transmon capacitance.
+- Keep the explicit capacitor and junction as separate rigid symbols with
+  clear parallel wiring, readable labels, and no overlapping SVG geometry.
+
 ## Preserve rigid element geometry
 
 - Treat every non-wire element as a rigid symbol with canonical terminal
@@ -47,11 +58,28 @@ automation.
   placement. Prefer delete-and-replace when a move could distort native
   terminal geometry.
 
+## Align nodes and wires to the canvas grid
+
+- Treat canvas grid lines as routing tracks and grid intersections (the corners
+  of grid cells) as the only valid node locations.
+- Place every circuit node, junction, port attachment, and element terminal
+  exactly on a grid intersection. Never place one at the center of a grid cell
+  or at any other half-grid offset.
+- Route every wire along grid lines as horizontal or vertical segments, with
+  every bend and endpoint on a grid intersection. Never route a wire through
+  cell interiors or use diagonal segments.
+- When supplying numeric coordinates, use exact integer grid steps relative to
+  the canvas grid origin. Preserve the existing grid spacing and phase when
+  editing a circuit; do not infer node coordinates from symbol-body centers.
+- If imported or existing geometry is off-grid, snap the affected nodes and
+  wire bends to intersections while preserving connectivity and rigid element
+  geometry.
+
 ## Route offsets with wires
 
 - Add explicit wire edges between canonical element terminals and the intended
   circuit junction.
-- Prefer short orthogonal wire routes on the editor grid.
+- Prefer short orthogonal wire routes on the canvas grid lines.
 - Keep wires outside symbol bodies and leads except at the terminals they
   intentionally join.
 - Put junction dots at actual wire intersections. Avoid decorative bends,
@@ -70,7 +98,10 @@ After every construction or geometry edit:
 2. Re-read compact topology when connectivity or terminal placement changed.
 3. Correct all unintended overlaps, dangling connections, stretched leads, and
    wires crossing symbol bodies.
-4. Confirm that labels are readable and the schematic fits cleanly.
-5. When the active surface supports it, check both light and dark themes.
+4. Confirm that every node and wire bend sits on a grid intersection and every
+   wire segment follows a grid line; correct any cell-centered or half-grid
+   geometry even when it looks visually close.
+5. Confirm that labels are readable and the schematic fits cleanly.
+6. When the active surface supports it, check both light and dark themes.
 
 Do not claim completion until the rendered circuit has been inspected.

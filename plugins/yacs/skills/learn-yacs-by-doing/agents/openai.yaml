@@ -1,7 +1,7 @@
 interface:
-  display_name: "Explore YACS Examples"
-  short_description: "Open YACS tutorials, examples, and recipes"
-  default_prompt: "Use $explore-yacs-examples to find and open a relevant YACS tutorial or example."
+  display_name: "Learn YACS by Doing"
+  short_description: "Reach a first verified YACS result"
+  default_prompt: "Use $learn-yacs-by-doing to guide me to a first verified result in YACS."
   icon_small: "./assets/yacs-icon.png"
   icon_large: "./assets/yacs-icon.png"
   brand_color: "#2563EB"

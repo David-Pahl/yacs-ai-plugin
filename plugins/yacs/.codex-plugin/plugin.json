@@ -1,7 +1,7 @@
 {
   "name": "yacs",
-  "version": "0.3.0+codex.20260811110306",
-  "description": "Design, repair, analyze, and optimize superconducting microwave circuits in YACS.",
+  "version": "0.3.0+codex.20260824004633",
+  "description": "Learn, design, sweep, analyze, repair, and optimize superconducting microwave circuits in YACS.",
   "author": {
     "name": "David Pahl",
     "url": "https://yacs.studio"
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "YACS",
     "shortDescription": "Design and analyze circuits in YACS.",
-    "longDescription": "Use focused YACS skills and the local MCP integration to construct topology-safe schematics, repair workspaces, explore maintained examples, run analyses, and guide optimizations in the installed YACS Desktop app.",
+    "longDescription": "Use focused YACS skills and the local MCP integration to learn from verified examples, choose and configure analyses, explore design sensitivity, construct topology-safe schematics, repair workspaces, and guide optimizations in the installed YACS Desktop app.",
     "developerName": "David Pahl",
     "category": "Science",
     "capabilities": [
@@ -30,9 +30,9 @@
     ],
     "websiteURL": "https://yacs.studio",
     "defaultPrompt": [
-      "Draw a clean YACS circuit from my description.",
-      "Inspect and refine the circuit open in YACS.",
-      "Run and interpret an analysis or optimization in YACS."
+      "Take me from an idea to my first validated YACS result.",
+      "Set up and run the right analysis for the circuit open in YACS.",
+      "Show how this design changes when I vary an important parameter."
     ],
     "brandColor": "#2563EB",
     "composerIcon": "./assets/yacs-icon.png",

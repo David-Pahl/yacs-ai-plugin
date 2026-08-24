@@ -3,7 +3,7 @@
   "name": "yacs",
   "displayName": "YACS",
   "version": "0.3.0",
-  "description": "Design, repair, analyze, and optimize circuits with the local YACS Desktop MCP integration.",
+  "description": "Learn, design, sweep, analyze, repair, and optimize circuits with the local YACS Desktop MCP integration.",
   "author": {
     "name": "David Pahl",
     "url": "https://yacs.studio"
