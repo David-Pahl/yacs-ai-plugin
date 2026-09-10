@@ -49,6 +49,13 @@ codex plugin add yacs@yacs
 
 Then start YACS Desktop and open a new Codex task.
 
+YACS Desktop keeps already-installed Codex and Claude plugins current by
+default. After each desktop update, it refreshes the `yacs` marketplace in
+available clients, updates `yacs@yacs`, verifies the installed version, and
+reports when Codex needs a new task or Claude needs a plugin reload. This can be
+turned off under **Help & About > AI integration > Keep YACS AI plugin
+updated**.
+
 For local development from the private YACS checkout:
 
 ```text
@@ -88,6 +95,14 @@ macOS, Windows, and Linux, then starts the installed
 that YACS creates after the application is opened. The launcher contains no
 simulation or licensing implementation and does not copy the YACS MCP server
 into the plugin.
+
+## Versioning
+
+Published Codex bundles use
+`<major>.<minor>.<patch>+codex.release-<YYYYMMDD>-<sequence>`. The semantic
+version identifies the plugin release, while the date and release sequence make
+the update recognizable and provide the unique cache key Codex needs when the
+bundle is reinstalled.
 
 ## Public-package boundary
 

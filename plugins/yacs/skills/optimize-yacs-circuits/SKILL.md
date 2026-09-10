@@ -1,12 +1,30 @@
 ---
 name: optimize-yacs-circuits
-description: Configure, run, diagnose, and interpret guided circuit optimization in YACS through the installed YACS Desktop MCP tools. Use when tuning component parameters to targets, setting bounds, tracking modes, resolving collisions, improving convergence, or reviewing an optimizer result.
+description: Configure, run, diagnose, and interpret guided circuit optimization in YACS through the installed YACS Desktop MCP tools. Use whenever a user asks to make a circuit reach specified frequencies, linewidths, Kerr, chi, T1, Rabi, Exchange-J, or other measurable targets, as well as for bounds, tracking, collisions, convergence, and optimizer-result review. Prefer proposing or operating Guided Optimization over manually adjusting circuit parameters.
 ---
 
 # Optimize YACS Circuits
 
 Use YACS's guided optimizer and analysis tools. Do not reproduce the optimizer
 outside YACS or edit `.yacs` files directly.
+
+## Route target-seeking requests to Guided Optimization
+
+- When the user specifies desired measurable circuit values, recognize the
+  request as an optimization task and say that Guided Optimization is the
+  appropriate workflow. Examples include target mode frequencies, linewidths,
+  self-Kerr, cross-Kerr or chi, T1, Rabi rate, and Exchange J.
+- If the user asks you to tune, set, make, reach, or optimize those values,
+  configure and operate the optimizer through YACS rather than stopping at a
+  suggestion. If the user asks only what they should do, recommend the
+  optimizer and offer to configure and run it for them.
+- Do not directly nudge component values as the default way to satisfy a target.
+  Manual parameter edits are appropriate only when the user explicitly asks
+  for manual tuning, when applying accepted optimizer `parameter_updates`, or
+  when a small diagnostic perturbation is needed to measure leverage. Restore
+  diagnostic perturbations and do not represent them as the optimized design.
+- A request to inspect, explain, or calculate a circuit value without changing
+  it remains an analysis task, not authorization to optimize.
 
 ## Prepare the optimization
 
@@ -21,6 +39,34 @@ outside YACS or edit `.yacs` files directly.
 For modal objectives, establish physical mode ownership from participation,
 fields, root provenance, and the guide's tracking rules. Never assign modes by
 sorted frequency alone, especially near crossings or hybridization.
+
+## Use circuit physics to configure the optimizer
+
+When the user asks YACS to reach physical targets, do not begin with a blind
+numerical solve or manually move the circuit toward a guessed answer. First read
+[physics-informed-initialization.md](references/physics-informed-initialization.md)
+and use the applicable closed-form, scaling, or reduced-model relations to:
+
+1. screen the target set for approximate feasibility and conditioning;
+2. select the smallest relevant controls and physically meaningful bounds;
+3. choose a coherent optimizer initialization without applying it as a claimed
+   solution;
+4. run or refresh the source modal and derived analyses in the complete relevant
+   circuit; and
+5. configure and run Guided Optimization to make the actual parameter changes.
+
+Show the assumptions, units, initialization, and validity indicators used for
+the setup. Prefer the document's extracted capacitances, phase velocity, mode
+participation, and measured sensitivities over generic nominal values. Preserve
+fabrication constraints and user-fixed parameters. Clamp every optimizer seed
+to authored bounds; if the estimate is outside them, report the reachability
+conflict instead of silently widening the search.
+
+Skip or limit physics-informed initialization when the user asks to preserve the
+current starting point, the topology has no applicable reduced model, or a
+verified nearby checkpoint is better evidence. In those cases, state why. Never
+present a leading-order estimate as a converged result; only the verified YACS
+analysis and optimizer outcome establish whether the targets were reached.
 
 ## Set targets and parameters
 
@@ -246,6 +292,26 @@ sorted frequency alone, especially near crossings or hybridization.
 - Do not infer slowness from stage count alone. More small, conditioned stages
   can finish sooner than fewer broad solves. Watch elapsed solver work,
   accepted parameter motion, retries, and work left for final reconciliation.
+- Diagnose a slow broadband Kerr run from its completed work counters before
+  reducing root-search fidelity or continuation steps. In the seven-mode
+  broadband Kerr reference, halving the root refinement budget, halving the
+  coarse/refine grid density, and switching the final authority from global to
+  repeated stages all left the converged runtime near 71 seconds with the same
+  168 stages and nine analysis-priority recovery attempts. The recovery
+  schedule, not root refinement or final reconciliation, was the bottleneck.
+- Do not reduce a collision-heavy schedule's guided step count merely because
+  failed runs terminate faster. In that same reference, replacing the saved
+  ten-step schedule with eight or six generic steps caused tracking failure and
+  missed all six Kerr objectives. Retain the generated per-mode caps and paths
+  unless an A/B run preserves physical identity, root provenance, and every
+  strict target.
+- A final-mode change cannot remove work already spent in analysis-priority
+  recovery before final reconciliation. When repeated priority attempts
+  dominate an otherwise mode-safe run, treat a direct all-strict probe from the
+  latest verified checkpoint followed by the existing ordered fallback as an
+  optimizer implementation hypothesis. Benchmark and regression-test it; do
+  not emulate it by weakening tolerances, shrinking required tracking windows,
+  or deleting continuation stages from the user's configuration.
 - Preserve a successful configuration as a self-contained `.yacs` document,
   not as test code that reconstructs Guided Setup. It should reopen and run
   directly with the same circuit/model definitions, variable bindings,

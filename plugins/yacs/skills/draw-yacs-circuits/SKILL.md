@@ -82,6 +82,14 @@ automation.
 - Prefer short orthogonal wire routes on the canvas grid lines.
 - Keep wires outside symbol bodies and leads except at the terminals they
   intentionally join.
+- Treat port markers and ground symbols as occupied SVG geometry, including
+  the full port circle or ground shape. Only the intended connection may touch
+  its exact attachment point; component bodies, leads, other wires, and other
+  symbols must remain clear of the rest of the marker.
+- Connect a nearby component to a port or ground through enough explicit wire
+  that the component's rendered envelope cannot overlap the port or ground
+  shape. Do not place a component directly against either marker merely because
+  their terminal coordinates are distinct.
 - Put junction dots at actual wire intersections. Avoid decorative bends,
   ambiguous crossings, accidental doubled nodes, and unintended overlaps.
 - Keep labels, neighboring symbols, and wire bends clear of one another.
@@ -96,8 +104,9 @@ After every construction or geometry edit:
 
 1. Call `render_yacs_page` and inspect the rendered schematic.
 2. Re-read compact topology when connectivity or terminal placement changed.
-3. Correct all unintended overlaps, dangling connections, stretched leads, and
-   wires crossing symbol bodies.
+3. Correct all unintended overlaps, including any component, lead, or wire
+   intruding into a port circle or ground shape, plus dangling connections,
+   stretched leads, and wires crossing symbol bodies.
 4. Confirm that every node and wire bend sits on a grid intersection and every
    wire segment follows a grid line; correct any cell-centered or half-grid
    geometry even when it looks visually close.

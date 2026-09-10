@@ -14,6 +14,9 @@ Repair through the YACS MCP tools. Do not use Computer Use or hand-edit saved
 2. Read `get_yacs_topology` for the affected page or circuit-model owner.
 3. Call `render_yacs_page` and inspect the actual schematic when geometry or
    routing may be involved.
+   Treat the complete port circle and ground shape as occupied SVG geometry:
+   except for the intended connection at its attachment point, no component
+   body, lead, wire, or other symbol may overlap either marker.
 4. Use `get_yacs_analysis_context` for analysis, binding, port-load, or
    preflight failures.
 5. Identify the smallest confirmed defect. Separate topology errors, visual
