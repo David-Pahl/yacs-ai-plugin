@@ -8,12 +8,22 @@ description: Diagnose and repair broken, invalid, imported, or visually damaged 
 Repair through the YACS MCP tools. Do not use Computer Use or hand-edit saved
 `.yacs` data when the MCP can express the change.
 
+## Document progress with snapshots
+
+For hands-on YACS work, tell the user you will document progress with frequent
+snapshots. Call `snapshot_yacs` at the starting state, after meaningful changes,
+at useful milestones during long runs, and at the final result. Use
+`view: "circuit"` for schematics and `view: "window"` for controls, progress, and
+results. Inspect each image and post it inline in a user-visible progress update
+with a brief observation and next step. Avoid duplicate images of unchanged
+state; use result tools to substantiate numerical claims.
+
 ## Diagnose before editing
 
 1. Call `get_yacs_status` when connection state is unknown.
 2. Read `get_yacs_topology` for the affected page or circuit-model owner.
-3. Call `render_yacs_page` and inspect the actual schematic when geometry or
-   routing may be involved.
+3. Call `snapshot_yacs` with `view: "circuit"` and inspect the actual schematic
+   when geometry or routing may be involved.
    Treat the complete port circle and ground shape as occupied SVG geometry:
    except for the intended connection at its attachment point, no component
    body, lead, wire, or other symbol may overlap either marker.

@@ -8,6 +8,16 @@ description: Configure, run, and interpret one- or two-axis YACS Parameter Sweep
 Use YACS Parameter Sweep analyses and bounded result inspection. Do not export
 the circuit or reproduce the sweep outside YACS.
 
+## Document progress with snapshots
+
+For hands-on YACS work, tell the user you will document progress with frequent
+snapshots. Call `snapshot_yacs` at the starting state, after meaningful changes,
+at useful milestones during long runs, and at the final result. Use
+`view: "circuit"` for schematics and `view: "window"` for controls, progress, and
+results. Inspect each image and post it inline in a user-visible progress update
+with a brief observation and next step. Avoid duplicate images of unchanged
+state; use result tools to substantiate numerical claims.
+
 ## Define the question and baseline
 
 1. Call `get_yacs_status` when needed and read `get_yacs_topology` for the

@@ -9,6 +9,16 @@ Use the installed YACS Desktop MCP server for circuit operations. Do not use
 Computer Use or edit saved `.yacs` data directly when the YACS MCP tools support
 the requested operation.
 
+## Document progress with snapshots
+
+For hands-on YACS work, tell the user you will document progress with frequent
+snapshots. Call `snapshot_yacs` at the starting state, after meaningful changes,
+at useful milestones during long runs, and at the final result. Use
+`view: "circuit"` for schematics and `view: "window"` for controls, progress, and
+results. Inspect each image and post it inline in a user-visible progress update
+with a brief observation and next step. Avoid duplicate images of unchanged
+state; use result tools to substantiate numerical claims.
+
 ## Confirm the YACS connection
 
 Call `get_yacs_status` when connection state is unknown. The YACS plugin starts
@@ -86,10 +96,20 @@ automation.
   the full port circle or ground shape. Only the intended connection may touch
   its exact attachment point; component bodies, leads, other wires, and other
   symbols must remain clear of the rest of the marker.
+- Choose each port or ground's position and rotation together with its final
+  connecting wire segment. Put the marker at an exposed end of the branch, with
+  its full shape and label extending into clear space away from nearby wires,
+  junctions, and elements.
+- Prefer to align the marker with its final straight wire segment: up or down
+  on a vertical branch, left or right on a horizontal branch. Of the aligned
+  orientations, choose the one that points the ground or port outward from
+  the circuit. For example, a ground at the top of a vertical branch should
+  point up rather than down toward the connected elements or sideways.
 - Connect a nearby component to a port or ground through enough explicit wire
   that the component's rendered envelope cannot overlap the port or ground
-  shape. Do not place a component directly against either marker merely because
-  their terminal coordinates are distinct.
+  shape. Move or reroute the branch when rotation alone cannot provide clearance.
+  Do not place a component directly against either marker merely because their
+  terminal coordinates are distinct.
 - Put junction dots at actual wire intersections. Avoid decorative bends,
   ambiguous crossings, accidental doubled nodes, and unintended overlaps.
 - Keep labels, neighboring symbols, and wire bends clear of one another.
@@ -102,10 +122,13 @@ automation.
 
 After every construction or geometry edit:
 
-1. Call `render_yacs_page` and inspect the rendered schematic.
+1. Call `snapshot_yacs` with `view: "circuit"` and inspect the returned native
+   image. Use `view: "window"` when showing the complete YACS progress view is
+   useful.
 2. Re-read compact topology when connectivity or terminal placement changed.
-3. Correct all unintended overlaps, including any component, lead, or wire
-   intruding into a port circle or ground shape, plus dangling connections,
+3. Check each port and ground's full shape, label, and orientation against its
+   connecting wire and surrounding circuit. Correct any overlap or marker
+   pointing back into nearby wires or elements, plus dangling connections,
    stretched leads, and wires crossing symbol bodies.
 4. Confirm that every node and wire bend sits on a grid intersection and every
    wire segment follows a grid line; correct any cell-centered or half-grid

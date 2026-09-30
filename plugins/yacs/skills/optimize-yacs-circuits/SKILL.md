@@ -8,6 +8,16 @@ description: Configure, run, diagnose, and interpret guided circuit optimization
 Use YACS's guided optimizer and analysis tools. Do not reproduce the optimizer
 outside YACS or edit `.yacs` files directly.
 
+## Document progress with snapshots
+
+For hands-on YACS work, tell the user you will document progress with frequent
+snapshots. Call `snapshot_yacs` at the starting state, after meaningful changes,
+at useful milestones during long runs, and at the final result. Use
+`view: "circuit"` for schematics and `view: "window"` for controls, progress, and
+results. Inspect each image and post it inline in a user-visible progress update
+with a brief observation and next step. Avoid duplicate images of unchanged
+state; use result tools to substantiate numerical claims.
+
 ## Route target-seeking requests to Guided Optimization
 
 - When the user specifies desired measurable circuit values, recognize the
@@ -73,6 +83,10 @@ analysis and optimizer outcome establish whether the targets were reached.
 - Translate the user's goal into explicit targets with units and tolerances.
 - Select the smallest physically relevant set of tunable parameters. Preserve
   fixed fabrication or design constraints.
+- For reusable circuit models, tune exposed model-interface parameters and
+  variables rather than reaching into nested child elements. Confirm the
+  resolved control still points to the intended internal parameter before
+  running; copied models can reuse child IDs while differing by owner.
 - Use realistic bounds and initial values. Do not widen bounds merely to force
   convergence.
 - Check whether each target has meaningful leverage from at least one selected
@@ -117,6 +131,12 @@ analysis and optimizer outcome establish whether the targets were reached.
   bounded joint endpoint. Estimate residual rows times active controls for the
   replay pass and the global solve; do not assume that either choice is cheaper
   from stage count alone.
+- Before that Global finish, treat progressive reassembly as a physical
+  warm-start and tracking pass, not a second final optimizer. Complete one
+  block-coordinate sweep through each growing prefix and hand the best fully
+  tracked assembled checkpoint to Global when local blocks plateau. If a
+  preferred-bound restart changes the warm start, replay the authored
+  reassembly once from that new state instead of reusing stale prefix values.
 - Treat a requested loaded doublet as unresolved after isolated pair-only
   stages. Repeat-only reconciliation is appropriate only when the saved
   schedule also contains an explicit full-circuit hybrid modal reassembly row
@@ -130,6 +150,11 @@ analysis and optimizer outcome establish whether the targets were reached.
   pairing when local stages are intended to solve physically independent
   scopes. This is a recommendation, not a validity rule: retain cumulative
   stages when earlier isolated solutions deliberately seed later stages.
+- Keep automatic rooted guidance when it identifies the relevant loss
+  boundaries. In a multiport loaded circuit, retain the two strongest port
+  anchors selected from modal dissipation (or impedance-path fallback) so a
+  co-frequency pair is not collapsed onto one boundary. Use a manual root only
+  when the physical support or returned topology shows that selection is wrong.
 - For an isolated multi-mode network with one exceptionally broad pole, root
   tracking may need substantially larger per-mode frequency and linewidth
   windows. Start from guided setup's recommendations; scales around 20 can be

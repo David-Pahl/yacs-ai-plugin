@@ -8,6 +8,16 @@ description: Guide a new or returning YACS user from a learning goal to a first 
 Use maintained content shipped with the installed YACS version. Optimize for a
 visible, interpretable result rather than merely opening a lesson.
 
+## Document progress with snapshots
+
+For hands-on YACS work, tell the user you will document progress with frequent
+snapshots. Call `snapshot_yacs` at the starting state, after meaningful changes,
+at useful milestones during long runs, and at the final result. Use
+`view: "circuit"` for schematics and `view: "window"` for controls, progress, and
+results. Inspect each image and post it inline in a user-visible progress update
+with a brief observation and next step. Avoid duplicate images of unchanged
+state; use result tools to substantiate numerical claims.
+
 ## Choose the shortest successful path
 
 1. Call `get_yacs_status` when connection state is unknown.
@@ -25,7 +35,7 @@ visible, interpretable result rather than merely opening a lesson.
 
 - Add maintained content with `add_yacs_bundled_example`. Use
   `build_yacs_circuit` only for a primitive recipe returned by YACS.
-- Navigate to the relevant page or analysis and call `render_yacs_page` to
+- Navigate to the relevant page or analysis and call `snapshot_yacs` to
   confirm the intended circuit is visible.
 - Select the configured analysis that directly answers the learning goal. Read
   its compact configuration with `get_yacs_analysis_context` before running it.
