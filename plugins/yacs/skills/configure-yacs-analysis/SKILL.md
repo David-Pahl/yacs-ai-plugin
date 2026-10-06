@@ -23,6 +23,12 @@ state; use result tools to substantiate numerical claims.
 - Transmission, reflection, or port-to-port response: `S`.
 - Port impedance or admittance: `Z` or `Y`.
 - Natural frequencies, linewidths, quality factors, or fields: `detY`.
+- Qubit and resonator frequencies in a circuit containing Josephson junctions:
+  `EPR`, reporting **f01 (GHz)** from **Frequency corrections** for both kinds
+  of mode (`shifted_frequency_ghz`). Use detY to locate the linear modes when
+  needed, then obtain a current EPR result at the same circuit and bias. Report
+  linear eigenfrequencies separately only when requested, and label them as
+  linear; if EPR cannot be obtained, say that f01 is unavailable.
 - Junction participation, anharmonicity, Kerr, or thermal dephasing: `EPR`.
 - Port-resolved relaxation or lifetime: `portwiseT1`.
 - Drive coupling, Rabi frequency, or pi time: `rabiRate`.

@@ -73,6 +73,16 @@ installation or legacy recovery.
 
 ## Report the result
 
+When asked to report qubit and resonator frequencies in a circuit containing
+Josephson junctions, report EPR's **f01 (GHz)** from its **Frequency corrections**
+table for both kinds of mode (`shifted_frequency_ghz` in the result). Identify
+the modes from participation or fields, and use a current EPR result for the
+same circuit and bias. If that result is missing or stale, obtain it before
+reporting f01; if it cannot be obtained, say that f01 is unavailable. When the
+user explicitly requests linear eigenfrequencies, report those separately and
+label them as linear (`linear_frequency_ghz`), rather than substituting them
+for f01.
+
 Report the analysis and owner, the configuration that materially affects the
 answer, the principal result with units, relevant warnings, and the physical
 interpretation. Distinguish values read from YACS from inferences, and recommend
