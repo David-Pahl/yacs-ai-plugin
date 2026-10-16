@@ -11,12 +11,28 @@ the circuit or reproduce the sweep outside YACS.
 ## Document progress with snapshots
 
 For hands-on YACS work, tell the user you will document progress with frequent
-snapshots. Call `snapshot_yacs` at the starting state, after meaningful changes,
-at useful milestones during long runs, and at the final result. Use
-`view: "circuit"` for schematics and `view: "window"` for controls, progress, and
-results. Inspect each image and post it inline in a user-visible progress update
-with a brief observation and next step. Avoid duplicate images of unchanged
-state; use result tools to substantiate numerical claims.
+snapshots: at the starting state, after meaningful changes, at useful milestones
+during long runs, and at the final result.
+
+- Use PNG as the default snapshot format so it displays inline on phones and
+  computers. For schematics, call `snapshot_yacs` with `view: "circuit"`.
+  Keep the high-resolution default: up to two pixels per native SVG unit,
+  `max_dimension: 18000`, and a 25-megapixel total allocation cap. A long
+  12-pair array can render around 17,306 x 1,250 pixels. Use lower resolution
+  only for a lightweight preview; do not replace the full-resolution output.
+- Preserve the circuit's component names, parameter values, units, variable
+  expressions, and annotations as rendered by YACS. Do not strip numerical
+  labels, replace them with generic symbols, or hide values to make a snapshot
+  simpler unless the user explicitly requests a value-free schematic.
+- For interface views, use `snapshot_yacs` with `view: "window"` to capture PNG
+  screenshots of controls, dialogs, progress, or results as shown in the app.
+  Window captures retain native screen resolution rather than being enlarged.
+- Share the PNG inline and link the full-resolution file for zooming. Offer SVG
+  or PDF only when requested.
+
+Inspect the rendered output and post it inline in a user-visible progress
+update with a brief observation and next step. Avoid duplicate images of
+unchanged state; use result tools to substantiate numerical claims.
 
 ## Define the question and baseline
 

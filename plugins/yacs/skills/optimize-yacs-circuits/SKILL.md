@@ -11,12 +11,28 @@ outside YACS or edit `.yacs` files directly.
 ## Document progress with snapshots
 
 For hands-on YACS work, tell the user you will document progress with frequent
-snapshots. Call `snapshot_yacs` at the starting state, after meaningful changes,
-at useful milestones during long runs, and at the final result. Use
-`view: "circuit"` for schematics and `view: "window"` for controls, progress, and
-results. Inspect each image and post it inline in a user-visible progress update
-with a brief observation and next step. Avoid duplicate images of unchanged
-state; use result tools to substantiate numerical claims.
+snapshots: at the starting state, after meaningful changes, at useful milestones
+during long runs, and at the final result.
+
+- Use PNG as the default snapshot format so it displays inline on phones and
+  computers. For schematics, call `snapshot_yacs` with `view: "circuit"`.
+  Keep the high-resolution default: up to two pixels per native SVG unit,
+  `max_dimension: 18000`, and a 25-megapixel total allocation cap. A long
+  12-pair array can render around 17,306 x 1,250 pixels. Use lower resolution
+  only for a lightweight preview; do not replace the full-resolution output.
+- Preserve the circuit's component names, parameter values, units, variable
+  expressions, and annotations as rendered by YACS. Do not strip numerical
+  labels, replace them with generic symbols, or hide values to make a snapshot
+  simpler unless the user explicitly requests a value-free schematic.
+- For interface views, use `snapshot_yacs` with `view: "window"` to capture PNG
+  screenshots of controls, dialogs, progress, or results as shown in the app.
+  Window captures retain native screen resolution rather than being enlarged.
+- Share the PNG inline and link the full-resolution file for zooming. Offer SVG
+  or PDF only when requested.
+
+Inspect the rendered output and post it inline in a user-visible progress
+update with a brief observation and next step. Avoid duplicate images of
+unchanged state; use result tools to substantiate numerical claims.
 
 ## Route target-seeking requests to Guided Optimization
 
@@ -29,8 +45,10 @@ state; use result tools to substantiate numerical claims.
   suggestion. If the user asks only what they should do, recommend the
   optimizer and offer to configure and run it for them.
 - Do not directly nudge component values as the default way to satisfy a target.
-  Manual parameter edits are appropriate only when the user explicitly asks
-  for manual tuning, when applying accepted optimizer `parameter_updates`, or
+  Bounded physics-informed initialization on the working copy is part of the
+  optimizer workflow below. Other manual parameter edits are appropriate only
+  when the user explicitly asks for manual tuning, when applying accepted
+  optimizer `parameter_updates`, or
   when a small diagnostic perturbation is needed to measure leverage. Restore
   diagnostic perturbations and do not represent them as the optimized design.
 - A request to inspect, explain, or calculate a circuit value without changing
@@ -52,18 +70,57 @@ sorted frequency alone, especially near crossings or hybridization.
 
 ## Use circuit physics to configure the optimizer
 
-When the user asks YACS to reach physical targets, do not begin with a blind
-numerical solve or manually move the circuit toward a guessed answer. First read
+Use physics-informed seeding by default when an applicable reduced model exists.
+When the user asks YACS to reach physical targets, first read the MCP resource
+`yacs://optimization-physics-guide` when advertised by the server, and
 [physics-informed-initialization.md](references/physics-informed-initialization.md)
 and use the applicable closed-form, scaling, or reduced-model relations to:
 
 1. screen the target set for approximate feasibility and conditioning;
 2. select the smallest relevant controls and physically meaningful bounds;
-3. choose a coherent optimizer initialization without applying it as a claimed
-   solution;
+3. apply a coherent, bounded optimizer initialization on the automation-owned
+   working copy, preserving the original checkpoint and explicit bounds;
 4. run or refresh the source modal and derived analyses in the complete relevant
    circuit; and
-5. configure and run Guided Optimization to make the actual parameter changes.
+5. configure and run Guided Optimization to polish and verify the design.
+
+If an older MCP does not advertise the physics guide, use the bundled reference
+and existing supported tools; do not invent a missing tool or solver option.
+For a requested replay of an authored reference, load its seeded start verbatim
+and skip reseeding or Guided Setup regeneration. Retain its complete saved
+schedule, original targets and bounds; evaluate all original targets afterward.
+
+Prefer calibration from the current complete-circuit modal/EPR analysis to a
+target-only estimate. Try at most two calibrated seed passes, reevaluating the
+full circuit each time and keeping the better verified strict-residual state.
+Stop seeding on stalled progress or uncertain physical identity, then diagnose
+or polish with native optimization. A seed that already satisfies every target
+still requires final full-circuit verification. Never invent an `initialValue`
+or automatic-seeding option: use the existing revision-checked parameter/model/
+variable updates to initialize the working copy, then refresh Guided Setup.
+
+For a common Purcell-filter array, prefer testing local qubit/readout parameter
+blocks with complete circuit loading before enabling circuit-cut isolation.
+The twelve-pair calibrated-seed experiment converged with full-circuit blocks;
+circuit-isolated stages were slower and did not establish a twelve-pair final
+solution within the tested budget. Do not generalize that result into a fixed
+ordering of frequency, kappa and chi for every circuit.
+
+For multiplexed readouts on a shared Purcell filter, read
+[shared-purcell-filter-arrays.md](references/shared-purcell-filter-arrays.md)
+when linewidths stall, a bus length reaches a bound, or targets span a wide
+band. Diagnose coupling position and the shared electrical-length budget before
+widening bounds or adding recovery passes. A permitted bus redesign can restore
+leverage even when capacitance seeding already meets alpha and chi.
+
+Native derived-analysis rows can anchor modes at their entry coordinates.
+If the seeded frequencies or linewidths still miss, include explicit modal
+correction rows before derived rows. A local-only finish needs a complete
+mode/analysis checkpoint: the last pair's returned rows alone do not verify
+the array. An empty stage analysis-target list may also leave automatic
+analysis-priority recovery active; inspect actual work before calling a pass
+modal-only. Recompute every original target in the full circuit, using fresh
+EPR shifted frequencies for requested qubit f01 rather than linear proxies.
 
 Show the assumptions, units, initialization, and validity indicators used for
 the setup. Prefer the document's extracted capacitances, phase velocity, mode
@@ -353,6 +410,16 @@ analysis and optimizer outcome establish whether the targets were reached.
   stage, retry, recovery, and root-provenance contracts without committing
   bulky result payloads. Never mutate the fixture in memory to recreate the
   successful setup.
+- For a reproducibility handoff, checksum the exported start and endpoint and
+  preserve the actual solver implementation and dependency/thread settings.
+  A dirty checkout needs a restorable source patch and base commit; hashes
+  alone cannot restore it. Run the exported start unchanged in two fresh
+  processes and retain separate receipts for every original target and bound,
+  physical identity, stage/retry/recovery counts and root provenance. Numerical
+  fits and timing need not be bit-identical. Distinguish saved-seed replay from
+  seed generation, and native API checks from Desktop/MCP validation. Preserve
+  a pre-seed state and executable recipe if claiming seed-generation replay;
+  otherwise state that exclusion and any untested recipient-build limitation.
 - Compare performance with live and stepwise plotting disabled, and report
   optimizer time separately from wall time. Plot-during-optimization and
   stepwise figures add checkpoint serialization and rendering work; validate
@@ -368,10 +435,11 @@ on a single success flag. Report achieved values with units, residual misses,
 final parameters, active constraints, mode-tracking assumptions, and any
 tradeoffs. Suggest a follow-up only when it has a clear diagnostic purpose.
 
-For coupled qubit-readout tuning, use a physically ordered loop: establish and
-separate mode frequencies, tune resonator linewidths, tune chi and exchange J,
-then rerun the modal source analysis and retune linewidths because the coupling
-changes can move and reload the resonators. Small local changes may use
+For coupled qubit-readout tuning, apply the applicable calibrated seed first.
+Without a better verified schedule, use frequency, linewidth, then chi/exchange J
+as a dependency-order baseline and compare with joint local parameter blocks.
+Rerun the modal source analysis and retune linewidths because coupling changes
+can move and reload the resonators. Small local changes may use
 `|chi| proportional to C_c^2` and symmetric-arm `|J|` proportional to the
 product of the arm capacitances as initial estimates only; measure again after
 every update. For magnitude constraints such as `abs_eq`, report both the

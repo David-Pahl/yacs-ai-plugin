@@ -12,12 +12,28 @@ the requested operation.
 ## Document progress with snapshots
 
 For hands-on YACS work, tell the user you will document progress with frequent
-snapshots. Call `snapshot_yacs` at the starting state, after meaningful changes,
-at useful milestones during long runs, and at the final result. Use
-`view: "circuit"` for schematics and `view: "window"` for controls, progress, and
-results. Inspect each image and post it inline in a user-visible progress update
-with a brief observation and next step. Avoid duplicate images of unchanged
-state; use result tools to substantiate numerical claims.
+snapshots: at the starting state, after meaningful changes, at useful milestones
+during long runs, and at the final result.
+
+- Use PNG as the default snapshot format so it displays inline on phones and
+  computers. For schematics, call `snapshot_yacs` with `view: "circuit"`.
+  Keep the high-resolution default: up to two pixels per native SVG unit,
+  `max_dimension: 18000`, and a 25-megapixel total allocation cap. A long
+  12-pair array can render around 17,306 x 1,250 pixels. Use lower resolution
+  only for a lightweight preview; do not replace the full-resolution output.
+- Preserve the circuit's component names, parameter values, units, variable
+  expressions, and annotations as rendered by YACS. Do not strip numerical
+  labels, replace them with generic symbols, or hide values to make a snapshot
+  simpler unless the user explicitly requests a value-free schematic.
+- For interface views, use `snapshot_yacs` with `view: "window"` to capture PNG
+  screenshots of controls, dialogs, progress, or results as shown in the app.
+  Window captures retain native screen resolution rather than being enlarged.
+- Share the PNG inline and link the full-resolution file for zooming. Offer SVG
+  or PDF only when requested.
+
+Inspect the rendered output and post it inline in a user-visible progress
+update with a brief observation and next step. Avoid duplicate images of
+unchanged state; use result tools to substantiate numerical claims.
 
 ## Confirm the YACS connection
 
@@ -96,6 +112,8 @@ automation.
   the full port circle or ground shape. Only the intended connection may touch
   its exact attachment point; component bodies, leads, other wires, and other
   symbols must remain clear of the rest of the marker.
+- Wire routes must clear the full port and ground triangles, including their
+  transparent interiors and leads, in every rotation.
 - Choose each port or ground's position and rotation together with its final
   connecting wire segment. Put the marker at an exposed end of the branch, with
   its full shape and label extending into clear space away from nearby wires,
@@ -122,9 +140,9 @@ automation.
 
 After every construction or geometry edit:
 
-1. Call `snapshot_yacs` with `view: "circuit"` and inspect the returned native
-   image. Use `view: "window"` when showing the complete YACS progress view is
-   useful.
+1. Call `snapshot_yacs` with `view: "circuit"` and inspect its high-resolution
+   native PNG schematic. Use `view: "window"` when showing interface controls
+   or progress is useful.
 2. Re-read compact topology when connectivity or terminal placement changed.
 3. Check each port and ground's full shape, label, and orientation against its
    connecting wire and surrounding circuit. Correct any overlap or marker
