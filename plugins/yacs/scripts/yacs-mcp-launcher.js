@@ -22,7 +22,12 @@ function macSpotlightCandidates() {
   const result = spawnSync(
     "mdfind",
     ["kMDItemCFBundleIdentifier == 'studio.yacs.desktop'"],
-    { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+      timeout: 3000,
+      maxBuffer: 1024 * 1024,
+    },
   );
   if (result.status !== 0 || !result.stdout) return [];
   return result.stdout
@@ -48,7 +53,6 @@ function candidates() {
       ...explicit,
       "/Applications/Yacs.app/Contents/Resources/backend-bin/yacs-desktop-server/yacs-desktop-server",
       path.join(home, "Applications", "Yacs.app", "Contents", "Resources", "backend-bin", "yacs-desktop-server", "yacs-desktop-server"),
-      ...macSpotlightCandidates(),
     ];
   }
   if (process.platform === "win32") {
@@ -79,8 +83,19 @@ function backendArguments(extraArguments) {
   return ["--mcp-stdio", ...extraArguments];
 }
 
+function findExecutable() {
+  const installed = candidates().find(executableFile);
+  if (installed) return installed;
+  // Every MCP connection starts a launcher. Avoid a Spotlight subprocess on
+  // the normal path, including when an explicit executable was configured.
+  if (process.platform === "darwin") {
+    return macSpotlightCandidates().find(executableFile);
+  }
+  return undefined;
+}
+
 function main() {
-  const executable = candidates().find(executableFile);
+  const executable = findExecutable();
   if (!executable) {
     console.error("YACS Desktop was not found in a standard installation location.");
     console.error("Install and start YACS, or use Help & About > AI integration > Connection status and fallback setup for a nonstandard installation.");
@@ -105,5 +120,5 @@ function main() {
   }
 }
 
-module.exports = { backendArguments, candidates };
+module.exports = { backendArguments, candidates, findExecutable };
 if (require.main === module) main();
